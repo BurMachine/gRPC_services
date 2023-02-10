@@ -1,12 +1,10 @@
-module burmachine
+module burmachine/pkg/api
 
 go 1.19
 
-replace burmachine/pkg/api => ./pkg/api
-
 require (
-	burmachine/pkg/api v0.0.0-00010101000000-000000000000
 	google.golang.org/grpc v1.53.0
+	google.golang.org/protobuf v1.28.1
 )
 
 require (
@@ -15,5 +13,4 @@ require (
 	golang.org/x/sys v0.4.0 // indirect
 	golang.org/x/text v0.6.0 // indirect
 	google.golang.org/genproto v0.0.0-20230110181048-76db0878b65f // indirect
-	google.golang.org/protobuf v1.28.1 // indirect
 )
