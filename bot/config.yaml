@@ -1,0 +1,5 @@
+{
+  port: ":8080",
+  port_grpc: ":9090",
+  api_key: "6093253114:AAH10pVdH66SDroBmigd_uo-XeHIosK8yg4"
+}
