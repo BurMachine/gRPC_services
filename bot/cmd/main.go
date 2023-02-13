@@ -3,9 +3,11 @@ package main
 import (
 	"burmachineBot/internal/bot"
 	"burmachineBot/internal/config"
+	"burmachineBot/internal/grpcClient"
 	"flag"
-	"github.com/rs/zerolog"
 	"os"
+
+	"github.com/rs/zerolog"
 )
 
 func main() {
@@ -27,5 +29,7 @@ func main() {
 	if err != nil {
 		log.Fatal().Msg("bot registration failed: " + err.Error())
 	}
-	tgbot.Run()
+	grpcSinalChan := make(chan int)
+	go grpcClient.RunClient(conf.AddrGrpc, &log, grpcSinalChan)
+	tgbot.Run(grpcSinalChan)
 }

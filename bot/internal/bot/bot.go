@@ -3,10 +3,11 @@ package bot
 import (
 	"burmachineBot/internal/config"
 	"fmt"
-	"github.com/rs/zerolog"
-)
 
-import tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
+	"github.com/rs/zerolog"
+
+	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
+)
 
 type Bot struct {
 	Logger *zerolog.Logger
@@ -23,7 +24,7 @@ func (b *Bot) BotRegistration(apiKey string) error {
 	return nil
 }
 
-func (b *Bot) Run() {
+func (b *Bot) Run(grpcChan chan int) {
 	u := tgbotapi.NewUpdate(0)
 	u.Timeout = 60
 
@@ -37,7 +38,13 @@ func (b *Bot) Run() {
 				b.Logger.Fatal().Err(err).Msg("callback error")
 			}
 			if update.CallbackQuery.Data == "get_currency" {
-				// resp
+				grpcChan <- 1
+				select {
+				case data := <-grpcChan:
+					b.Bot.Send(tgbotapi.NewMessage(update.Message.Chat.ID, fmt.Sprintf("%d data", data)))
+				default:
+					b.Bot.Send(tgbotapi.NewMessage(update.Message.Chat.ID, "123"))
+				}
 			}
 		} else if update.Message != nil {
 			b.Logger.Info().Msg(fmt.Sprintf("event = user:%s + mes:%s", update.Message.From.UserName, update.Message.Text))
