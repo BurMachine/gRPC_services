@@ -29,7 +29,8 @@ func main() {
 	if err != nil {
 		log.Fatal().Msg("bot registration failed: " + err.Error())
 	}
+	grpcChanIn := make(chan int)
 	grpcSinalChan := make(chan int)
-	go grpcClient.RunClient(conf.AddrGrpc, &log, grpcSinalChan)
-	tgbot.Run(grpcSinalChan)
+	go grpcClient.RunClient(conf.AddrGrpc, &log, grpcSinalChan, grpcChanIn)
+	tgbot.Run(grpcSinalChan, grpcChanIn)
 }

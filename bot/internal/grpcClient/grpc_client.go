@@ -9,7 +9,7 @@ import (
 	"google.golang.org/grpc"
 )
 
-func RunClient(port string, logger *zerolog.Logger, grpcChan chan int) {
+func RunClient(port string, logger *zerolog.Logger, grpcChan chan int, grpcInChan chan int) {
 	conn, err := grpc.Dial(port, grpc.WithInsecure())
 	if err != nil {
 		logger.Fatal().Err(err).Msg("grpc dial error")
@@ -23,6 +23,7 @@ func RunClient(port string, logger *zerolog.Logger, grpcChan chan int) {
 				logger.Info().Err(err).Msg("error client")
 			}
 			fmt.Println(a)
+			grpcInChan <- int(a.Result)
 		}
 	}
 }

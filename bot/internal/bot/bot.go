@@ -24,7 +24,7 @@ func (b *Bot) BotRegistration(apiKey string) error {
 	return nil
 }
 
-func (b *Bot) Run(grpcChan chan int) {
+func (b *Bot) Run(grpcChan chan int, grpcInChan chan int) {
 	u := tgbotapi.NewUpdate(0)
 	u.Timeout = 60
 
@@ -40,10 +40,11 @@ func (b *Bot) Run(grpcChan chan int) {
 			if update.CallbackQuery.Data == "get_currency" {
 				grpcChan <- 1
 				select {
-				case data := <-grpcChan:
+				case data := <-grpcInChan:
 					b.Bot.Send(tgbotapi.NewMessage(update.Message.Chat.ID, fmt.Sprintf("%d data", data)))
 				default:
-					b.Bot.Send(tgbotapi.NewMessage(update.Message.Chat.ID, "123"))
+					msg := tgbotapi.NewMessage(update.CallbackQuery.Message.Chat.ID, "123")
+					b.Bot.Send(msg)
 				}
 			}
 		} else if update.Message != nil {
